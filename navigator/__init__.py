@@ -14,7 +14,7 @@ class Navigator(object):
     id_field_name = 'pk'
 
     def __init__(self, current_id, queryset):
-        self.current_id = str(current_id)
+        self.current_id = current_id
         self.queryset = queryset
 
     @property
