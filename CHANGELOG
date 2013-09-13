@@ -3,4 +3,5 @@ Changelog
 
 0.1 (unreleased)
 ----------------
+ - Fix set_ids method (keep given ids order)
  - First draft of the navigator

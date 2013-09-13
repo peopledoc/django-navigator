@@ -11,6 +11,7 @@ class Navigator(object):
     """
     session_id = None
     url_id = None
+    id_field_name = 'pk'
 
     def __init__(self, current_id, queryset):
         self.current_id = str(current_id)
@@ -23,7 +24,8 @@ class Navigator(object):
         """
         if not hasattr(self, '_ids_cache'):
             setattr(self, '_ids_cache',
-                    list(self.queryset.values_list('uuid', flat=True)))
+                    list(self.queryset.values_list(
+                        self.id_field_name, flat=True)))
         return self._ids_cache
 
     def set_ids(self, session):
@@ -33,10 +35,13 @@ class Navigator(object):
         """
         ids = session.get(self.session_id, [])
         if ids:
-            setattr(self, '_ids_cache', list(self.queryset
-                                                 .filter(uuid__in=ids)
-                                                 .values_list('uuid',
-                                                              flat=True)))
+            # Be sure each id from ids exists in queryset
+            qs_ids = list(self.queryset.filter(pk__in=ids).values_list(
+                self.id_field_name, flat=True))
+            # Keep order of original ids list
+            ids = [id for id in ids if id in qs_ids]
+            # Set ids in cache
+            setattr(self, '_ids_cache', ids)
             return ids
         else:
             return self.ids
@@ -76,7 +81,6 @@ class Navigator(object):
     @models.permalink
     def previous_url(self):
         if self.previous:
-            print (self.url_id, [self.previous])
             return (self.url_id, [self.previous])
         return None
 
