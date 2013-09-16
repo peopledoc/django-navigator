@@ -1,7 +1,10 @@
 Changelog
 =========
 
+0.2 (in dev)
+------------
+
 0.1
-----------------
+---
  - Fix set_ids method (keep given ids order)
  - First draft of the navigator
